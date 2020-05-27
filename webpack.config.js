@@ -2,7 +2,7 @@ const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin');//打包带着html文件
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');//每次打包自动清理dist
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
-
+const CopyPlugin = require('copy-webpack-plugin');
 module.exports = {
     // entry: path.resolve(__dirname,'src/index.js'),//入口
     entry: './src/index.js',//入口
@@ -63,7 +63,14 @@ module.exports = {
             template: './src/public/index.html'
         }),
         new CleanWebpackPlugin(),//自动清理dist文件夹插件,
-        new VueLoaderPlugin()//vue相关插件
+        new VueLoaderPlugin(),//vue相关插件
+        new CopyPlugin([
+            {
+                from: path.resolve(__dirname, 'src/public'),
+                to: path.resolve(__dirname, 'dist'),
+                ignore: ['index.html']
+            }
+        ])
     ],
 
     mode: 'development',//配置启动模式，开发模式还是生产模式
@@ -78,10 +85,11 @@ module.exports = {
 
     resolve: {
         extensions: [".js", ".json", ".vue"], //解决导入省略后缀名称
-        // alias: {
-        //     //给路径起别名,以后导入vue的时候，默认是在找vue/dist/vue.esm.js
-        //     'vue$': 'vue/dist/vue.esm.js'
-        // }
+        alias: {
+            //给路径起别名,以后导入vue的时候，默认是在找vue/dist/vue.esm.js
+            // 'vue$': 'vue/dist/vue.esm.js'
+            '@': path.resolve(__dirname, 'src')
+        }
     },
 
 
